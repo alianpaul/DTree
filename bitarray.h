@@ -17,7 +17,7 @@
 #define uchar unsigned char
 #endif
 
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c \n"
 #define BYTE_TO_BINARY(byte)   \
   ((byte) & 0x80 ? '1' : '0'), \
   ((byte) & 0x40 ? '1' : '0'), \
@@ -30,7 +30,6 @@
 
 #define ALLOC_BITARRAY(bitarray, size) \
   (bitarray) = (uchar*) malloc(((size - 1)/8 + 1) * sizeof(uchar))
-
 
 #define FREE_BITARRAY(bitarray) \
   free((bitarray))
@@ -47,12 +46,5 @@
 
 #define GET_BITARRAY(bitarray, idx) \
   (((uchar*)bitarray)[(idx)/8] & (0x80 >> ((idx) % 8)))
-
-
-
-
-
-
-
 
 #endif

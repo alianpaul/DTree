@@ -21,10 +21,10 @@ typedef struct ssvinfo {
  *   size_t num_data
  *   SSVINFO ssvinfo
  */
-void** read_ssv_file(char* filename,
-		     size_t* num_feat_p,
-		     size_t* num_data_p,
-		     SSVINFO* ssvinfo);
+void** read_ssv_to_data(char* filename,
+			size_t* num_feat_p,
+			size_t* num_data_p,
+			SSVINFO* ssvinfo);
 
 
 

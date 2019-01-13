@@ -45,6 +45,6 @@
   ((uchar*)bitarray)[(idx)/8] &= ~(0x80 >> ((idx) % 8))
 
 #define GET_BITARRAY(bitarray, idx) \
-  (((uchar*)bitarray)[(idx)/8] & (0x80 >> ((idx) % 8)))
+  ((((uchar*)bitarray)[(idx)/8] & (0x80 >> ((idx) % 8)))) >> (7 - ((idx) % 8))
 
 #endif

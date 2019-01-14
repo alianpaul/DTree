@@ -2,9 +2,15 @@
 #include "utils.h"
 #include "bitarray.h"
 
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <search.h>
+
+//#define NDEBUG
+#include <assert.h>
+
 
 #define BUFF_SIZE           32768
 #define DEFAULT_DATA_SIZE   65536
@@ -197,6 +203,7 @@ read_ssv_to_data(char* filename,
   memset(ssvinfo_p->num_discrete_vals, 0, num_feats);
   memset(ssvinfo_p->discrete_vals,     0, num_feats * sizeof(char**));
 
+  hcreate(num_datas_alloc * num_feats); //record the value of features' all attr
   size_t num_data_read = 0;
   for(size_t i_data = 0; i_data < num_datas_alloc; ++i_data)
     {
@@ -208,28 +215,35 @@ read_ssv_to_data(char* filename,
 
       for(size_t i_feat = 0; i_feat < num_feats; ++i_feat)
 	{
-	  char* feat_val  = next_word(&buff_p);
-	  char  feat_type = ssvinfo_p->feat_types[i_feat];
-
-	  switch(feat_type)
+	  char*  attr_name     = next_word(&buff_p);
+	  char   attr_type     = ssvinfo_p->feat_types[i_feat];
+	  size_t attr_name_len = 0;
+	  size_t feat_name_len = strlen(ssvinfo_p->feat_names[i_feat]);
+	  
+	  switch(attr_type)
 	    {
 	    case 'b':
-	      printf("b %s\n", feat_val);
-	      unsigned char val= *feat_val - '0';
+	      printf("b %s\n", attr_name);
+	      
+	      unsigned char val= *attr_name - '0';
 	      write_attrib_b(ssvinfo_p->data, i_data, i_feat, val);
-	      //printf("CHECK b %d\n", read_attrib_b(ssvinfo_p->data, i_data, i_feat));
+	      assert(val == read_attrib_b(ssvinfo_p->data, i_data, i_feat));
 	      break;
 	    case 'd':
-	      //printf("d %s\n", feat_val);
-	      //size_t attr_name_len = strlen(feat_val);
+	      attr_name_len = strlen(attr_name);
+	      printf("%zu\n", attr_name_len);
+	      printf("d %s\n", attr_name);
+	      
+	      ENTRY* e_p = (ENTRY*) getmem(sizeof(ENTRY));
+	      char*  key = (char*)  getmem(attr_name_len +
+					   feat_name_len + 1);
+
 	      break;
 	    case 'c':
 	      //printf("c %s\n", feat_val);
 	      break;
 	    }
 	}
-      if(num_data_read == 20)
-	break;
     }
 }
 

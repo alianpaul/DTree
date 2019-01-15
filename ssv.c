@@ -216,28 +216,93 @@ read_ssv_to_data(char* filename,
       for(size_t i_feat = 0; i_feat < num_feats; ++i_feat)
 	{
 	  char*  attr_name     = next_word(&buff_p);
-	  char   attr_type     = ssvinfo_p->feat_types[i_feat];
 	  size_t attr_name_len = 0;
-	  size_t feat_name_len = strlen(ssvinfo_p->feat_names[i_feat]);
+	  char   feat_type     = ssvinfo_p->feat_types[i_feat];
+	  char*  feat_name     = ssvinfo_p->feat_names[i_feat];
+	  size_t feat_name_len = strlen(feat_name);
 	  
-	  switch(attr_type)
+	  switch(feat_type)
 	    {
 	    case 'b':
-	      printf("b %s\n", attr_name);
-	      
-	      unsigned char val= *attr_name - '0';
-	      write_attrib_b(ssvinfo_p->data, i_data, i_feat, val);
-	      assert(val == read_attrib_b(ssvinfo_p->data, i_data, i_feat));
+	      {
+		unsigned char attr_val_b = *attr_name - '0';
+		write_attrib_b(ssvinfo_p->data, i_data, i_feat, attr_val_b);
+		assert(attr_val_b ==
+		       read_attrib_b(ssvinfo_p->data, i_data, i_feat));
+	      }
 	      break;
 	    case 'd':
-	      attr_name_len = strlen(attr_name);
-	      printf("%zu\n", attr_name_len);
-	      printf("d %s\n", attr_name);
-	      
-	      ENTRY* e_p = (ENTRY*) getmem(sizeof(ENTRY));
-	      char*  key = (char*)  getmem(attr_name_len +
-					   feat_name_len + 1);
+	      {
+		int           attr_val_d = -1;
+		attr_name_len = strlen(attr_name);
+		printf("%zu\n",  attr_name_len);
+		printf("d %s\n", attr_name);
 
+		//Form the key
+		ENTRY* e_f = (ENTRY*) getmem(sizeof(ENTRY));
+		ENTRY* e_r = NULL;
+		e_f->key   = (char*)  getmem(attr_name_len +
+					     feat_name_len + 1);
+		strcpy(e_f->key, feat_name);
+		printf("name %s=\n", e_f->key);
+		strncpy(&(e_f->key[feat_name_len]), attr_name, attr_name_len);
+		printf("name %s=\n", e_f->key);
+
+		// Test if the key exists. If not, add it to
+		// ssvinfo_p->num_discrete_vals
+		// ssvinfo_p->discrete_vals
+
+		if( (e_r = hsearch(*e_f, FIND)) == NULL)
+		  {
+		    //Attribute feature has not been seen before
+		    //1. update # of discrete_vals of this feature
+		    attr_val_d   = ssvinfo_p->num_discrete_vals[i_feat]++;
+		    e_f->data    = (void*) getmem(sizeof(int));
+		    *((int*)e_f->data) = attr_val_d;
+		    if(hsearch(*e_f, ENTER) == NULL)
+		      USER_ERROR("hash table insert error");
+
+		    //2. update discrete_vals
+		    char*  attr_name_add = (char*) getmem(attr_name_len + 1);
+		    strcpy(attr_name_add, attr_name);
+		    printf("new attr_name_ssv %s=\n", attr_name_add);
+
+		    //attr_val_d is also the attribute values that we already has
+		    if(attr_val_d == 0)
+		      {
+			//not allocate yet, malloc the first one
+			ssvinfo_p->discrete_vals[i_feat] =
+			  (char**) malloc(sizeof(char*));
+		      }
+		    else
+		      {
+			assert(attr_val_d > 0);
+			//ready have, realloc
+			ssvinfo_p->discrete_vals[i_feat] =
+			  (char**) realloc(ssvinfo_p->discrete_vals[i_feat],
+					   sizeof(char*)
+					   *
+					   ssvinfo_p->num_discrete_vals[i_feat]);
+		      }
+
+		    ssvinfo_p->discrete_vals[i_feat][attr_val_d] = attr_name_add;
+		  }
+		else
+		  {
+		    //has been seen already, read the val directly
+		    attr_val_d = *((int*)e_r->data);
+
+		    char* store_attr_name =
+		      ssvinfo_p->discrete_vals[i_feat][attr_val_d];
+		    assert(strcmp(store_attr_name, attr_name) == 0);
+
+		    printf("store %s=\n", store_attr_name);
+		    printf("read  %s=\n", attr_name);
+		  }
+		write_attrib_i(ssvinfo_p->data, i_data, i_feat, attr_val_d);
+		assert(attr_val_d ==
+		       read_attrib_i(ssvinfo_p->data, i_data, i_feat));
+	      }
 	      break;
 	    case 'c':
 	      //printf("c %s\n", feat_val);

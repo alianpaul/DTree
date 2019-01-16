@@ -256,7 +256,7 @@ read_ssv_data(char* buff_p,
 }
 
 void
-read_ssv(char* filename,
+read_ssv(char* filename_in,
 	 SSVINFO* ssvinfo_p)
 {
   FILE*  file_p = NULL;
@@ -264,8 +264,8 @@ read_ssv(char* filename,
   size_t num_datas = 0;
   size_t num_datas_alloc = 0;
 
-  if ( (file_p = fopen(filename, "r")) == NULL )
-    USER_ERROR0("Can't find file %s", filename);
+  if ( (file_p = fopen(filename_in, "r")) == NULL )
+    USER_ERROR0("Can't find file %s", filename_in);
 
   char* line_buff = getmem(BUFF_SIZE);
   char* buff_p    = line_buff;
@@ -335,8 +335,20 @@ read_ssv(char* filename,
   ssvinfo_p->num_datas = num_data_read;
 }
 
+void
+write_ssv(char* filename_out,
+	  SSVINFO ssvinfo)
+{
+  FILE*  file_p = NULL;
+  if ( (file_p = fopen(filename_out, "w")) == NULL )
+    USER_ERROR0("Can't find file %s", filename_out);
+
+  fprintf(file_p, "%zu %zu\n", ssvinfo.num_feats, ssvinfo.num_datas);
+}
+
 int main()
 {
   SSVINFO ssvinfo;
-  read_ssv("data/noisy10_train.ssv", &ssvinfo);
+  read_ssv ("data/noisy10_train.ssv", &ssvinfo);
+  write_ssv("train.out",               ssvinfo);
 }

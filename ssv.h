@@ -7,8 +7,8 @@ typedef struct ssvinfo {
   void**  data;
   char*   feat_types;
   char**  feat_names;
-  char*** discrete_vals;
-  int*    num_discrete_vals;
+  char*** discrete_vals;     //for feat type d
+  int*    num_discrete_vals; //for feat type d
   size_t  num_feats;
   size_t  num_datas;
 } SSVINFO;
@@ -24,6 +24,6 @@ typedef struct ssvinfo {
  *   size_t num_data
  *   SSVINFO ssvinfo
  */
-void read_ssv_to_data(char* filename, SSVINFO* ssvinfo);
+void read_ssv(char* filename, SSVINFO* ssvinfo);
 
 #endif

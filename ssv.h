@@ -3,15 +3,22 @@
 
 #include "utils.h"
 
+/*
+ * discrete_vals[i_feat][i_discrete] //for feat type d, type name
+ * num_discrete [i_feat][i_discrete] //for feat type d, type name
+ */
+
 typedef struct ssvinfo {
   void**  data;
   char*   feat_types;
   char**  feat_names;
+  size_t  num_feats;
   char*** discrete_vals;     //for feat type d
   int*    num_discrete_vals; //for feat type d
-  size_t  num_feats;
   size_t  num_datas;
 } SSVINFO;
+
+
 
 
 /*
@@ -25,6 +32,6 @@ typedef struct ssvinfo {
  *   SSVINFO ssvinfo
  */
 void read_ssv (char* filename_in,  SSVINFO* ssvinfo_p);
-void write_ssv(char* filename_out, SSVINFO  ssvinfo  );
+void write_ssv(char* filename_out, SSVINFO* ssvinfo_p);
 
 #endif

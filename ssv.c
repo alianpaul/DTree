@@ -337,18 +337,60 @@ read_ssv(char* filename_in,
 
 void
 write_ssv(char* filename_out,
-	  SSVINFO ssvinfo)
+	  SSVINFO* ssvinfo_p)
 {
   FILE*  file_p = NULL;
   if ( (file_p = fopen(filename_out, "w")) == NULL )
     USER_ERROR0("Can't find file %s", filename_out);
 
-  fprintf(file_p, "%zu %zu\n", ssvinfo.num_feats, ssvinfo.num_datas);
+  //num of features and num of datas
+  fprintf(file_p, "%zu %zu\n", ssvinfo_p->num_feats, ssvinfo_p->num_datas);
+
+  //feature names
+  for(size_t i_feat = 0; i_feat < ssvinfo_p->num_feats; ++i_feat)
+    {
+      fprintf(file_p, "%s", ssvinfo_p->feat_names[i_feat]);
+      if(i_feat == (ssvinfo_p->num_feats - 1))
+	fprintf(file_p, "\n");
+      else
+	fprintf(file_p, " ");
+    }
+
+  //feature types
+  fprintf(file_p, "%s\n", ssvinfo_p->feat_types);
+
+  //data
+  for(size_t i_data = 0; i_data < ssvinfo_p->num_datas; ++i_data)
+    {
+      for(size_t i_feat = 0; i_feat < ssvinfo_p->num_feats; ++i_feat)
+	{
+	  void* feat_examples_p = ssvinfo_p->data[i_feat];
+	  if(ssvinfo_p->feat_types[i_feat] == 'b')
+	    {
+	      if(GET_BITARRAY(feat_examples_p, i_data))
+		fprintf(file_p, "%d", 1);
+	      else
+		fprintf(file_p, "%d", 0);
+	    }
+	  else if(ssvinfo_p->feat_types[i_feat] == 'd')
+	    {
+	      int i_discrete = ((int*)feat_examples_p)[i_data];
+	      fprintf(file_p, "%s", ssvinfo_p->discrete_vals[i_feat][i_discrete]);
+	    }
+
+	  if(i_feat == (ssvinfo_p->num_feats - 1))
+	    fprintf(file_p, "\n");
+	  else
+	    fprintf(file_p, " ");
+	}
+    }
 }
 
+/*
 int main()
 {
   SSVINFO ssvinfo;
   read_ssv ("data/noisy10_train.ssv", &ssvinfo);
-  write_ssv("train.out",               ssvinfo);
+  write_ssv("train.out",              &ssvinfo);
 }
+*/

@@ -3,8 +3,8 @@ CC = clang
 LIBS = -lm
 FLAGS = -O2
 EXEC = decision_tree
-SRCFILES = ssv.c utils.c
-OBJFILES = ssv.o utils.o
+SRCFILES = ssv.c utils.c entropy.c
+OBJFILES = ssv.o utils.o entropy.o
 
 all: $(EXEC)
 	@echo ""

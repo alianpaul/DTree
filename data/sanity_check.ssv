@@ -1,0 +1,17 @@
+6 0
+play_tennis day outlook temp humidity wind
+bddddd
+0 D1  sunny    hot  high   weak 
+0 D2  sunny    hot  high   strong
+1 D3  overcast hot  high   weak
+1 D4  rain     mild high   weak
+1 D5  rain     cool normal weak
+0 D6  rain     cool normal strong
+1 D7  overcast cool normal strong
+0 D8  sunny    mild high   weak
+1 D9  sunny    cool normal weak
+1 D10 rain     mild normal weak
+1 D11 sunny    mild normal strong
+1 D12 overcast mild high   strong
+1 D13 overcast hot  normal weak
+0 D14 rain     mild high   strong

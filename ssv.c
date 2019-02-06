@@ -198,7 +198,6 @@ read_ssv_data(char* buff_p,
 	    // Test if the key exists. If not, add it to
 	    // ssvinfo_p->num_discrete_vals
 	    // ssvinfo_p->discrete_vals
-
 	    if( (e_r = hsearch(*e_f, FIND)) == NULL)
 	      {
 		//Attribute feature has not been seen before
@@ -317,7 +316,7 @@ read_ssv(char* filename_in,
 	}
     }
   //init num_discrete_vals
-  memset(ssvinfo_p->num_discrete_vals, 0, num_feats);
+  memset(ssvinfo_p->num_discrete_vals, 0, num_feats * sizeof(int));
   memset(ssvinfo_p->discrete_vals,     0, num_feats * sizeof(char**));
 
   hcreate(num_datas_alloc * num_feats); //record the value of features' all attr
@@ -390,7 +389,8 @@ write_ssv(char* filename_out,
 int main()
 {
   SSVINFO ssvinfo;
-  read_ssv ("data/noisy10_train.ssv", &ssvinfo);
+  read_ssv ("data/sanity_check.ssv",  &ssvinfo);
   write_ssv("train.out",              &ssvinfo);
 }
 */
+

@@ -35,7 +35,9 @@ void read_ssv (char* filename_in,  SSVINFO* ssvinfo_p);
 void write_ssv(char* filename_out, SSVINFO* ssvinfo_p);
 
 unsigned char read_attrib_b (void **data, int example, int feature);
-void          write_attrib_b(void **data, int example, int feature,
-			     unsigned char val);
+void write_attrib_b(void **data, int example, int feature, unsigned char val);
+
+int read_attrib_i(void **data, int example, int feature);
+void write_attrib_i(void **data, int example, int feature, int val);
 
 #endif

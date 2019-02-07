@@ -16,12 +16,14 @@
 #define DEFAULT_DATA_SIZE   65536
 
 /* Read a binary (0/1) value. */
-unsigned char read_attrib_b(void **data, int example, int feature)
+unsigned char
+read_attrib_b(void **data, int example, int feature)
 {
   return GET_BITARRAY(data[feature], example);
 }
 /* Write a binary (0/1) value. */
-void write_attrib_b(void **data, int example, int feature, unsigned char val)
+void
+write_attrib_b(void **data, int example, int feature, unsigned char val)
 {
   if(val == 1)
     SET_BITARRAY_ONE (data[feature], example);
@@ -32,23 +34,28 @@ void write_attrib_b(void **data, int example, int feature, unsigned char val)
 }
 
 /* Read an integer. */
-int read_attrib_i(void **data, int example, int feature)
+int
+read_attrib_i(void **data, int example, int feature)
 {
   return ((int *) data[feature])[example];
 }
 /* Write an integer. */
-void write_attrib_i(void **data, int example, int feature, int val)
+void
+write_attrib_i(void **data, int example, int feature, int val)
 {
   ((int *) data[feature])[example] = val;
 }
 
 /* Read a double. */
-double read_attrib_c(void **data, int example, int feature)
+double
+read_attrib_c(void **data, int example, int feature)
 {
   return ((double *) data[feature])[example];
 }
+
 /* Write a double. */
-void write_attrib_c(void **data, int example, int feature, double val)
+void
+write_attrib_c(void **data, int example, int feature, double val)
 {
   ((double *) data[feature])[example] = val;
 }
@@ -193,7 +200,7 @@ read_ssv_data(char* buff_p,
 	    e_f->key   = (char*)  getmem(attr_name_len +
 					 feat_name_len + 1);
 	    strcpy(e_f->key, feat_name);
-	    strncpy(&(e_f->key[feat_name_len]), attr_name, attr_name_len);
+	    strncpy(&(e_f->key[feat_name_len]), attr_name, attr_name_len + 1);
 
 	    // Test if the key exists. If not, add it to
 	    // ssvinfo_p->num_discrete_vals
@@ -205,6 +212,7 @@ read_ssv_data(char* buff_p,
 		attr_val_d   = ssvinfo_p->num_discrete_vals[i_feat]++;
 		e_f->data    = (void*) getmem(sizeof(int));
 		*((int*)e_f->data) = attr_val_d;
+		
 		if(hsearch(*e_f, ENTER) == NULL)
 		  USER_ERROR("hash table insert error");
 
@@ -215,7 +223,7 @@ read_ssv_data(char* buff_p,
 		//attr_val_d is also the attribute values that we already has
 		if(attr_val_d == 0)
 		  {
-		    //not allocate yet, malloc the first one
+		    //not allocated yet, malloc the first one
 		    ssvinfo_p->discrete_vals[i_feat] =
 		      (char**) malloc(sizeof(char*));
 		  }
@@ -239,9 +247,11 @@ read_ssv_data(char* buff_p,
 
 		char* store_attr_name =
 		  ssvinfo_p->discrete_vals[i_feat][attr_val_d];
+		
 		assert(strcmp(store_attr_name, attr_name) == 0);
 		
 	      }
+
 	    write_attrib_i(ssvinfo_p->data, i_data, i_feat, attr_val_d);
 	    assert(attr_val_d ==
 		   read_attrib_i(ssvinfo_p->data, i_data, i_feat));

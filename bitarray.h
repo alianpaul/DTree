@@ -44,6 +44,14 @@
 #define SET_BITARRAY_ZERO(bitarray, idx) \
   ((uchar*)bitarray)[(idx)/8] &= ~(0x80 >> ((idx) % 8))
 
+#define SET_BITARRAY_RANGE_ONE(bitarray, begin, end) \
+  for(size_t i = begin; i < end; ++i) \
+    SET_BITARRAY_ONE(bitarray, i); \
+
+#define SET_BITARRAY_RANGE_ZERO(bitarray, begin, end) \
+  for(size_t i = begin; i < end; ++i) \
+    SET_BITARRAY_ZERO(bitarray, i);
+
 #define GET_BITARRAY(bitarray, idx) \
   ((((uchar*)bitarray)[(idx)/8] & (0x80 >> ((idx) % 8)))) >> (7 - ((idx) % 8))
 

@@ -14,8 +14,8 @@ double entropy_b(size_t num_pos, size_t num_neg);
  * return num_pos, num_neg
  */
 void   count_examples(SSVINFO* ssvinfo_p,
-		      uchar*   train_data_mask,
-		      size_t   num_train_data,
+		      uchar*   member_data_mask,
+		      size_t   num_member_data,
 		      size_t*  num_pos, size_t* num_neg);
 
 #endif

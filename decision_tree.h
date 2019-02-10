@@ -3,14 +3,15 @@
 
 #define MIN_LEAF_MEMBERS 1
 
-#include "ssvinfo_p"
+#include "ssv.h"
 
 typedef struct dtnodes
 {
-  int num_examples; /*Number of examples rooted at this node*/
-  int num_pos;      /*Number of positive examples*/
-  int num_neg;      /*Number of negative examples*/
+  size_t num_examples; /*Number of examples rooted at this node*/
+  size_t num_pos;      /*Number of positive examples*/
+  size_t num_neg;      /*Number of negative examples*/
 
+  int feat;
   int num_children;
   struct dtnodes **children;
   
@@ -18,6 +19,6 @@ typedef struct dtnodes
 
 /*
  */
-DTNODES *create_decision_tree(ssvinfo *ssvinfo_p);
+DTNODES *create_decision_tree(SSVINFO* ssvinfo_p);
 
 #endif

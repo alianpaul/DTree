@@ -4,15 +4,13 @@
 #include <math.h>
 #include <string.h>
 
-
-
 /*
  */
 double entropy_b(size_t num_pos, size_t num_neg)
 {
 
   if(num_pos == 0 || num_neg == 0)
-    return 0.0;
+    return 0.;
   
   double prob_pos = ((double)num_pos) / (double) (num_pos + num_neg);
   double prob_neg = ((double)num_neg) / (double) (num_pos + num_neg);
@@ -39,7 +37,6 @@ void   count_examples(SSVINFO* ssvinfo_p,
 	continue;
 
       //The first feature is the feature to predict
-      
       if(read_attrib_b(ssvinfo_p->data, i_data, 0))
 	++(*num_pos);
       else
@@ -157,9 +154,9 @@ double conditional_entropy_data_b(SSVINFO* ssvinfo_p,
 }
 
 
-int max_gain_feature(SSVINFO* ssvinfo_p,
-		     uchar* member_data_mask,
-		     size_t num_member_data)
+int find_max_gain_feature(SSVINFO* ssvinfo_p,
+			  uchar* member_data_mask,
+			  size_t num_member_data)
 {
   double entropy_orig  = entropy_data(ssvinfo_p, member_data_mask, num_member_data);
   int    max_gain_feat = -1;
@@ -227,7 +224,7 @@ int max_gain_feature(SSVINFO* ssvinfo_p,
 }
   
 
-
+/*
 int main()
 {
   SSVINFO ssvinfo;
@@ -259,5 +256,6 @@ int main()
   //printf("conditional entropy %lf\n", conditional_entropy);
 
   int feat = max_gain_feature(&ssvinfo, member_data_mask, 14);
+  printf("%d\n", feat);
 }
-
+*/

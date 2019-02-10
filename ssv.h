@@ -20,7 +20,6 @@ typedef struct ssvinfo {
 
 
 
-
 /*
  * Input:  
  *   filename
